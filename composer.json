@@ -1,0 +1,29 @@
+{
+    "name": "lekoala/silverstripe-micro-framework",
+    "description": "A micro framework for SilverStripe",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "silverstripe",
+        "micro",
+        "framework",
+        "module"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas",
+            "email": "thomas@lekoala.be"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "silverstripe/framework": "^4.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "LeKoala\\MicroFramework\\": "micro-framework/src/",
+            "LeKoala\\MicroFramework\\Tests\\": "micro-framework/tests/"
+        }
+    }
+}

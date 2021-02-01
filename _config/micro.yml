@@ -1,0 +1,19 @@
+---
+Name: micro
+  - 'mysite'
+  - 'app'
+After:
+  - 'framework'
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Core\CoreKernel:
+    class: 'LeKoala\MicroFramework\MicroKernel'
+  SilverStripe\ORM\DatabaseAdmin:
+    class: 'LeKoala\MicroFramework\MicroDatabaseAdmin'
+  SilverStripe\Security\Security:
+    class: 'LeKoala\MicroFramework\MicroSecurity'
+  SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
+    class: 'LeKoala\MicroFramework\SimpleSessionAuthenticationHandler'
+SilverStripe\Control\Director:
+  extensions:
+    - 'LeKoala\MicroFramework\DirectorExtension'
