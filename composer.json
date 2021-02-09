@@ -22,8 +22,8 @@
     },
     "autoload": {
         "psr-4": {
-            "LeKoala\\MicroFramework\\": "micro-framework/src/",
-            "LeKoala\\MicroFramework\\Tests\\": "micro-framework/tests/"
+            "LeKoala\\MicroFramework\\": "src/",
+            "LeKoala\\MicroFramework\\Tests\\": "tests/"
         }
     }
 }
