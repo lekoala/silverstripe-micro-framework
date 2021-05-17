@@ -10,6 +10,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
+use stdClass;
 
 /**
  * Authenticator for the default admin
@@ -34,7 +35,7 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
      */
     public static function buildDefaultMember($data = [], HTTPRequest $request)
     {
-        $data['ClassName'] = MicroMember::class;
+        $data['ClassName'] = Member::class;
         if (empty($data['ID'])) {
             $data['ID'] = 1;
         }
@@ -51,7 +52,37 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
         $data['TempIDHash'] = null;
         $data['TempIDExpired'] = null;
         $data['LockedOutUntil'] = null;
-        return new MicroMember($data, DataObject::CREATE_HYDRATED);
+
+        // Create an anonymous class to avoid polluting namespace
+        $class = new class extends Member
+        {
+            public function isPasswordExpired()
+            {
+                return false;
+            }
+
+            public function registerFailedLogin()
+            {
+                return true;
+            }
+
+            public function registerSuccessfulLogin()
+            {
+                return true;
+            }
+
+            public function regenerateTempID()
+            {
+                return true;
+            }
+
+            public function onBeforeWrite()
+            {
+                $this->brokenOnWrite = false;
+            }
+        };
+
+        return new $class($data, DataObject::CREATE_HYDRATED);
     }
 
     /**
