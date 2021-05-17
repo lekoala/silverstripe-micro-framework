@@ -6,6 +6,10 @@ use SilverStripe\Security\Member;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 
+/**
+ * We extend the default session auth handler in order to avoid
+ * direct calls to Member::get if the database is not configured
+ */
 class SimpleSessionAuthenticationHandler extends SessionAuthenticationHandler
 {
     /**

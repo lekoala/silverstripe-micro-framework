@@ -16,36 +16,46 @@ WARNING : this is highly experimental :-)
 
 In order to use this, you need to replace the default index.php with this
 
-    use LeKoala\MicroFramework\MicroKernel;
-    use SilverStripe\Control\HTTPApplication;
-    use SilverStripe\Control\HTTPRequestBuilder;
+```php
+// Force specific constants
+define('BASE_PATH', dirname(__DIR__));
+define('PUBLIC_DIR', 'public');
+define('PUBLIC_PATH', BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR);
+define('RESOURCES_DIR', 'resources');
 
-    // Force specific constants
-    define('BASE_PATH', dirname(__DIR__));
-    define('PUBLIC_DIR', 'public');
-    define('PUBLIC_PATH', BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR);
-    define('RESOURCES_DIR', 'resources');
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-    require dirname(__DIR__) . '/vendor/autoload.php';
-
-    // Build request and detect flush
-    $request = HTTPRequestBuilder::createFromEnvironment();
-    // Default application
-    $kernel = new MicroKernel(BASE_PATH);
-    $app = new HTTPApplication($kernel);
-    $response = $app->handle($request);
-    $response->output();
+// Build request and detect flush
+$request = \SilverStripe\Control\HTTPRequestBuilder::createFromEnvironment();
+// Default application
+$kernel = new \LeKoala\MicroFramework\MicroKernel(BASE_PATH);
+$app = new \SilverStripe\Control\HTTPApplication($kernel);
+$response = $app->handle($request);
+$response->output();
+```
 
 ## New base controller
 
-Please use MicroController as the base controller for your applications
+Please use MicroController as the base controller for your applications.
+It is recommended to create a base controller (like a PageController) as a base
+for your application instead of extending MicroController each time.
+
+```php
+class AppController extends MicroController
+{
+}
+```
 
 ### Setting base controller
 
-This is really handy for Security screen
+This is really handy for Security screen.
 
-    SilverStripe\Security\Security:
-      page_class: 'App\AppController'
+```yml
+SilverStripe\Security\Security:
+  page_class: 'App\AppController'
+```
+
+Note: this is working thanks to our custom MicroSecurity extension.
 
 ### Auto routing
 
@@ -64,7 +74,7 @@ will redirect to / to avoid duplicated urls.
 
 If it bothers you to declare two times your action (once as a function, and once as a function), fear not!
 
-You can now simply make sure your first argument accepts an HTTPRequest and it will be considered as a valid action.
+You can now simply make sure your first argument accepts an `HTTPRequest` and it will be considered as a valid action.
 
 ### Page compat
 
