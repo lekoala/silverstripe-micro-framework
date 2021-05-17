@@ -10,12 +10,18 @@ use SilverStripe\Core\Extension;
  */
 class DirectorExtension extends Extension
 {
+    /**
+     * Extend SilverStripe\Control\Director::handleRequest
+     *
+     * @param [type] $rules
+     * @return void
+     */
     public function updateRules(&$rules)
     {
         // Update security
         foreach ($rules as $rule => $ruleHandler) {
             if ($rule == 'Security//$Action/$ID/$OtherID') {
-                // $rules[$rule] = 'LeKoala\MicroFramework\MicroSecurity';
+                $rules[$rule] = MicroSecurity::class;
             }
             // We don't use CMS
             if ($rule == 'CMSSecurity//$Action/$ID/$OtherID') {
@@ -24,7 +30,7 @@ class DirectorExtension extends Extension
         }
 
 
-        // Auto routing
+        // Auto routing by url_segment
         $controllers = ClassInfo::subclassesFor(MicroController::class);
         array_shift($controllers);
 

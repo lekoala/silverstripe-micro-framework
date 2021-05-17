@@ -1,7 +1,5 @@
 ---
 Name: micro
-  - 'mysite'
-  - 'app'
 After:
   - 'framework'
 ---

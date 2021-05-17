@@ -14,7 +14,7 @@ use SilverStripe\Control\HTTPRequest;
  * - Accept by default any action that accepts a HTTPRequest as "allowed"
  * - a forTemplate method to avoid errors when using $CurrentPage global variable
  * - set a base "Page" template regardless of class hierarchy
- * - set url segment
+ * - set url segment for routing
  *
  * @link https://docs.silverstripe.org/en/4/developer_guides/controllers/
  */

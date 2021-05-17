@@ -3,8 +3,17 @@
 namespace LeKoala\MicroFramework;
 
 use SilverStripe\Security\Security;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Authenticator;
+use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\AuthenticationHandler;
+use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 
+/**
+ * Extend Security to avoid database less logins
+ * and avoid cms dependency
+ */
 class MicroSecurity extends Security
 {
     // We need to redeclare this
@@ -28,12 +37,32 @@ class MicroSecurity extends Security
             $auth = $this->getAuthenticators();
             $auth['default'] = new DefaultAdminAuthenticator;
             $this->setAuthenticators($auth);
+
+            // We cannot use those without a db
+            $AuthenticationHandler = Injector::inst()->get(IdentityStore::class);
+            $AuthenticationHandler->setHandlers([
+                'session' => Injector::inst()->get(SessionAuthenticationHandler::class)
+            ]);
         }
+    }
+
+    /**
+     * Avoid 404 errrors
+     *
+     * @return HTTPResponse
+     */
+    public function index()
+    {
+        if (Security::getCurrentUser()) {
+            return $this->redirect($this->Link('logout'));
+        }
+        return $this->redirect($this->Link('login'));
     }
 
     /**
      * Prepare the controller for handling the response to this request
      *
+     * @link https://github.com/silverstripe/silverstripe-framework/pull/9830
      * @param string $title Title to use
      * @return Controller
      */
