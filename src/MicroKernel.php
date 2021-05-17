@@ -29,11 +29,13 @@ class MicroKernel extends CoreKernel
         $this->bootPHP();
         $this->bootManifests($flush);
         $this->bootErrorHandling();
-        $this->bootDatabaseEnvVars();
+        if (self::usesDatabase()) {
+            $this->bootDatabaseEnvVars();
+        }
         $this->bootConfigs();
-        $this->bootDatabaseGlobals();
-
-        // database is not required
+        if (self::usesDatabase()) {
+            $this->bootDatabaseGlobals();
+        }
         if (self::usesDatabase()) {
             $this->validateDatabase();
             Security::force_database_is_ready(true);
