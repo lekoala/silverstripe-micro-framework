@@ -6,9 +6,6 @@ use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Security\AuthenticationHandler;
-use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 
 /**
  * Extend Security to avoid database less logins
@@ -31,19 +28,6 @@ class MicroSecurity extends Security
     protected function init()
     {
         parent::init();
-
-        // Without db, we only support default admin
-        if (!MicroKernel::usesDatabase()) {
-            $auth = $this->getAuthenticators();
-            $auth['default'] = new DefaultAdminAuthenticator;
-            $this->setAuthenticators($auth);
-
-            // We cannot use those without a db
-            $AuthenticationHandler = Injector::inst()->get(IdentityStore::class);
-            $AuthenticationHandler->setHandlers([
-                'session' => Injector::inst()->get(SessionAuthenticationHandler::class)
-            ]);
-        }
     }
 
     /**

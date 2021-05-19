@@ -12,6 +12,8 @@ SilverStripe\Core\Injector\Injector:
     class: 'LeKoala\MicroFramework\MicroSecurity'
   SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler:
     class: 'LeKoala\MicroFramework\SimpleSessionAuthenticationHandler'
+  SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler:
+    class: 'LeKoala\MicroFramework\SimpleCookieAuthenticationHandler'
 SilverStripe\Control\Director:
   extensions:
     - 'LeKoala\MicroFramework\DirectorExtension'

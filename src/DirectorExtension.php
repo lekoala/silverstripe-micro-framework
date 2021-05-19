@@ -13,7 +13,7 @@ class DirectorExtension extends Extension
     /**
      * Extend SilverStripe\Control\Director::handleRequest
      *
-     * @param [type] $rules
+     * @param array $rules
      * @return void
      */
     public function updateRules(&$rules)
@@ -28,7 +28,6 @@ class DirectorExtension extends Extension
                 unset($rules[$rule]);
             }
         }
-
 
         // Auto routing by url_segment
         $controllers = ClassInfo::subclassesFor(MicroController::class);
@@ -47,5 +46,22 @@ class DirectorExtension extends Extension
                 $rules[$segment . '//$Action/$ID/$OtherID'] = "->/";
             }
         }
+
+        // Clean unecessary middlewares
+        $middlewares = $this->owner->getMiddlewares();
+        $filteredMiddlewares = [];
+        $excludedMiddlewares = [
+            'AllowedHostsMiddleware',
+            'RequestProcessorMiddleware',
+            'ExecMetricMiddleware',
+            'ErrorControlChainMiddleware',
+        ];
+        foreach ($middlewares as $name => $inst) {
+            if (in_array($name, $excludedMiddlewares)) {
+                continue;
+            }
+            $filteredMiddlewares[$name] = $inst;
+        }
+        $this->owner->setMiddlewares($filteredMiddlewares);
     }
 }

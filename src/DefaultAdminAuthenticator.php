@@ -10,7 +10,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use stdClass;
 
 /**
  * Authenticator for the default admin

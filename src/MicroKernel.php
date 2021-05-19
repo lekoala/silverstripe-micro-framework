@@ -22,6 +22,11 @@ class MicroKernel extends CoreKernel
      */
     private $flush;
 
+    public function __construct($basePath)
+    {
+        parent::__construct($basePath);
+    }
+
     public function boot($flush = false)
     {
         $this->flush = $flush;
