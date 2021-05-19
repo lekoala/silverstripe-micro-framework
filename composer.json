@@ -15,15 +15,26 @@
             "email": "thomas@lekoala.be"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "silverstripe/framework": "^4.6"
+    },
+    "extra": {
+        "installer-name": "micro-framework"
     },
     "autoload": {
         "psr-4": {
             "LeKoala\\MicroFramework\\": "src/",
             "LeKoala\\MicroFramework\\Tests\\": "tests/"
         }
-    }
+    },
+    "support": {
+        "issues": "https://github.com/lekoala/silverstripe-micro-framework/issues"
+    },
+    "scripts": {
+        "lint": "phpcs src/ tests/",
+        "lint-clean": "phpcbf src/ tests/",
+        "test": "phpunit -v"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

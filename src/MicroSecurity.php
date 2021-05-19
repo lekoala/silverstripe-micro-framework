@@ -46,6 +46,13 @@ class MicroSecurity extends Security
     /**
      * Prepare the controller for handling the response to this request
      *
+     * You can do something like this:
+     *
+     * ```yml
+     * SilverStripe\Security\Security:
+     *   page_class: 'App\AppController'
+     * ```
+     *
      * @link https://github.com/silverstripe/silverstripe-framework/pull/9830
      * @param string $title Title to use
      * @return Controller
