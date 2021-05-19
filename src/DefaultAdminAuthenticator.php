@@ -45,7 +45,7 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
             $data['FirstName'] = explode("@", $data["Email"])[0];
         }
         if (empty($data['Surname'])) {
-            $data['Surname'] = '';
+            $data['Surname'] = 'Admin';
         }
         $data['FailedLoginCount'] = 0;
         $data['TempIDHash'] = null;
@@ -73,6 +73,16 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
             public function regenerateTempID()
             {
                 return true;
+            }
+
+            protected function loadLazyFields($class = null)
+            {
+                return true;
+            }
+
+            public function getHtmlEditorConfigForCMS()
+            {
+                return 'cms';
             }
 
             public function onBeforeWrite()
