@@ -32,8 +32,8 @@ class MicroSecurity extends Security
         parent::init();
 
         // Without db, we only support default admin
-        if (!MicroKernel::usesDatabase()) {
-            $auth = $this->getAuthenticators();
+        $auth = $this->getAuthenticators();
+        if (!MicroKernel::usesDatabase() || empty($auth)) {
             $auth['default'] = new DefaultAdminAuthenticator;
             $this->setAuthenticators($auth);
 

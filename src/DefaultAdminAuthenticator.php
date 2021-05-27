@@ -2,12 +2,15 @@
 
 namespace LeKoala\MicroFramework;
 
+use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
@@ -42,7 +45,7 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
             $data['Email'] = $request->getSession()->get("Email");
         }
         if (empty($data['FirstName'])) {
-            $data['FirstName'] = explode("@", $data["Email"])[0];
+            $data['FirstName'] = explode("@", $data["Email"])[0] ?? "Default";
         }
         if (empty($data['Surname'])) {
             $data['Surname'] = 'Admin';
@@ -55,6 +58,58 @@ class DefaultAdminAuthenticator extends MemberAuthenticator
         // Create an anonymous class to avoid polluting namespace
         $class = new class extends Member
         {
+            public function dbObject($fieldName)
+            {
+                $value = isset($this->record[$fieldName])
+                    ? $this->record[$fieldName]
+                    : null;
+
+
+                // If we have a DBField object in $this->record, then return that
+                if ($value instanceof DBField) {
+                    return $value;
+                }
+
+                $spec = self::config()->db[$fieldName] ?? null;
+                if (!$spec) {
+                    return;
+                }
+                $obj = Injector::inst()->create($spec, $fieldName);
+                $obj->setValue($value, $this, false);
+                return $obj;
+            }
+
+            public function getCMSFields()
+            {
+                $fields = new FieldList();
+                foreach ($this->record as $k => $v) {
+                    $obj = $this->dbObject($k);
+                    if (!$obj) {
+                        continue;
+                    }
+                    $fields->push($obj->scaffoldFormField($k));
+                }
+                return $fields;
+            }
+
+            public function canView($member = null)
+            {
+                return true;
+            }
+
+            public function canEdit($member = null)
+            {
+                return true;
+            }
+
+            public function hasValue($field, $arguments = null, $cache = true)
+            {
+                if (isset($this->record[$field])) {
+                    return true;
+                }
+                return parent::hasValue($field, $arguments, $cache);
+            }
+
             public function isPasswordExpired()
             {
                 return false;
