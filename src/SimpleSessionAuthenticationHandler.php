@@ -2,7 +2,6 @@
 
 namespace LeKoala\MicroFramework;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Security\Member;
 use SilverStripe\Control\HTTPRequest;
@@ -39,6 +38,7 @@ class SimpleSessionAuthenticationHandler extends SessionAuthenticationHandler
         } else {
             $member = DefaultAdminAuthenticator::buildDefaultMember(["ID" => $id], $request);
             // This is needed in order to avoid Permission:check calls
+            /** @var Kernel $kernel  */
             $kernel = Injector::inst()->get(Kernel::class);
             $kernel->setEnvironment('dev');
         }

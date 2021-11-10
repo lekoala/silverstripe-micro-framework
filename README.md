@@ -61,11 +61,13 @@ Note: this is working thanks to our custom MicroSecurity extension.
 
 If you define `url_segment` on your controllers, the will be added to available routes automatically
 
-    class HomeController extends AppController
-    {
-        private static $url_segment = 'home';
-        private static $is_home = true;
-        ...
+```php
+class HomeController extends AppController
+{
+    private static $url_segment = 'home';
+    private static $is_home = true;
+    ...
+```
 
 You can also set a `is_home` variable for the default controller. In this case, the default segment /home
 will redirect to / to avoid duplicated urls.

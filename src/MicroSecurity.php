@@ -7,6 +7,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\RequestAuthenticationHandler;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 
 /**
@@ -38,10 +39,15 @@ class MicroSecurity extends Security
             $this->setAuthenticators($auth);
 
             // We cannot use those without a db
-            $AuthenticationHandler = Injector::inst()->get(IdentityStore::class);
-            $AuthenticationHandler->setHandlers([
-                'session' => Injector::inst()->get(SessionAuthenticationHandler::class)
-            ]);
+            /** @var RequestAuthenticationHandler $authHandler  */
+            $authHandler = Injector::inst()->get(IdentityStore::class);
+            if ($authHandler instanceof RequestAuthenticationHandler) {
+                /** @var SessionAuthenticationHandler $sessionHandler  */
+                $sessionHandler = Injector::inst()->get(SessionAuthenticationHandler::class);
+                $authHandler->setHandlers([
+                    'session' => $sessionHandler
+                ]);
+            }
         }
     }
 
